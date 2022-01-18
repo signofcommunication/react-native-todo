@@ -29,7 +29,11 @@ export default function App() {
     <View style={styles.container}>
       <View style={styles.taskWrapper}>
         <Text style={styles.sectionTitle}>Today's Tasks</Text>
-
+        {taskItems.length > 0 && (
+          <View style={styles.itemsLength}>
+            <Text>{taskItems.length} todos still active</Text>
+          </View>
+        )}
         <View style={styles.items}>
           {taskItems.length != 0 ? (
             taskItems.map((i, index) => (
@@ -109,5 +113,8 @@ const styles = StyleSheet.create({
     borderColor: "#C0C0C0",
     borderWidth: 1,
   },
-  addText: {},
+  itemsLength: {
+    marginTop: 10,
+    marginLeft: 20,
+  },
 });
