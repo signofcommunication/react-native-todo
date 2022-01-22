@@ -9,12 +9,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Task from "./components/Task";
+import Menu from "./components/Menu";
 
 export default function App() {
   const [task, setTask] = useState("");
   const [taskItems, setTaskItems] = useState([]);
+  const [show, setShow] = useState(true);
 
   function handleAddTask() {
+    if (!task) {
+      return;
+    }
+
     setTaskItems([...taskItems, task]);
     setTask("");
   }
@@ -27,45 +33,57 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.taskWrapper}>
-        <Text style={styles.sectionTitle}>Today's Tasks</Text>
-        {taskItems.length > 0 && (
-          <View style={styles.itemsLength}>
-            <Text>{taskItems.length} todos still active</Text>
-          </View>
-        )}
-        <View style={styles.items}>
-          {taskItems.length != 0 ? (
-            taskItems.map((i, index) => (
-              <TouchableOpacity key={index} onPress={() => completeTask(index)}>
-                <Task title={i} />
-              </TouchableOpacity>
-            ))
-          ) : (
-            <View>
-              <Text>Todo-List is Empty</Text>
+      {show ? (
+        <Menu setShow={setShow} />
+      ) : (
+        <>
+          <View style={styles.taskWrapper}>
+            <Text style={styles.sectionTitle}>Today's Tasks</Text>
+            {taskItems.length > 0 && (
+              <View style={styles.itemsLength}>
+                <Text>
+                  {taskItems.length} {taskItems.length === 1 ? "todo" : "todos"}{" "}
+                  still active
+                </Text>
+              </View>
+            )}
+            <View style={styles.items}>
+              {taskItems.length != 0 ? (
+                taskItems.map((i, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    onPress={() => completeTask(index)}
+                  >
+                    <Task title={i} />
+                  </TouchableOpacity>
+                ))
+              ) : (
+                <View>
+                  <Text>Todo-List is Empty</Text>
+                </View>
+              )}
             </View>
-          )}
-        </View>
-      </View>
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.writeTaskWrapper}
-      >
-        <TextInput
-          style={styles.input}
-          placeholder="Write a task"
-          value={task}
-          onChangeText={t => setTask(t)}
-        />
-
-        <TouchableOpacity onPress={() => handleAddTask()}>
-          <View style={styles.addWrapper}>
-            <Text style={styles.addText}>+</Text>
           </View>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
+
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            style={styles.writeTaskWrapper}
+          >
+            <TextInput
+              style={styles.input}
+              placeholder="Write a task"
+              value={task}
+              onChangeText={t => setTask(t)}
+            />
+
+            <TouchableOpacity onPress={() => handleAddTask()}>
+              <View style={styles.addWrapper}>
+                <Text style={styles.addText}>+</Text>
+              </View>
+            </TouchableOpacity>
+          </KeyboardAvoidingView>
+        </>
+      )}
     </View>
   );
 }
